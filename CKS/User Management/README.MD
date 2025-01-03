@@ -1,5 +1,47 @@
-```markdown
 # Linux User Management Guide
+
+## Types of Users
+
+In Linux, there are three main types of users:
+
+1. **Root User**: 
+   - Also known as the superuser
+   - Has UID 0
+   - Has unlimited privileges on the system
+
+2. **System Users**: 
+   - Created by the system for specific services or applications
+   - Usually have UIDs between 1-999
+   - Often have `/usr/sbin/nologin` or `/sbin/nologin` as their shell to prevent interactive login
+
+3. **Regular Users**: 
+   - Created for individual human users
+   - Usually have UIDs 1000 or greater
+   - Typically have `/bin/bash` or another interactive shell
+
+## Identifying User Types
+
+You can identify the type of user by examining the `/etc/passwd` file:
+
+```
+cat /etc/passwd
+```
+
+Each line in this file represents a user account and has seven fields separated by colons:
+
+```
+username:password:UID:GID:comment:home_directory:shell
+```
+
+- System users often have low UID numbers and `/usr/sbin/nologin` as their shell
+- Regular users typically have higher UID numbers and an interactive shell like `/bin/bash`
+
+Example:
+```
+root:x:0:0:root:/root:/bin/bash
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash
+```
 
 ## Basic Command Pattern
 
@@ -173,4 +215,3 @@ Note: Many of these arguments are common between `useradd` and `usermod`. The ma
 10. Using sudo to perform administrative tasks without logging in as root.
 
 Remember, many of these commands require root or sudo privileges to execute. Always be cautious when modifying user accounts and permissions, as incorrect changes can affect system security and functionality.
-```
