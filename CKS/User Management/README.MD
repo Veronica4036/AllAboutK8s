@@ -162,6 +162,40 @@ chown user:group filename
 chmod permissions filename
 ```
 
+Certainly! Here's the section in Markdown format:
+
+## Setting or Changing Passwords
+
+### Set or change a user's password:
+```
+passwd username
+```
+Example: `passwd david`
+
+When you run this command:
+- If you're logged in as root, it will prompt you to enter and confirm a new password for the specified user.
+- If you're a regular user, it will first ask for your current password, then prompt you to enter and confirm your new password.
+
+### Additional passwd options:
+
+| Option | Description                                      |
+|--------|--------------------------------------------------|
+| -l     | Lock a user's password                           |
+| -u     | Unlock a user's password                         |
+| -d     | Delete a user's password (make it empty)         |
+| -e     | Expire a user's password (force change on next login) |
+| -S     | Display account status information               |
+
+Examples:
+```
+sudo passwd -l david     # Lock david's account
+sudo passwd -u david     # Unlock david's account
+sudo passwd -e david     # Force david to change password on next login
+sudo passwd -S david     # Display password status for david
+```
+
+Note: Changing passwords for other users typically requires root or sudo privileges.
+
 ## Common Arguments for User Management Commands
 
 ### useradd
