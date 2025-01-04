@@ -1,4 +1,4 @@
-## System Hardening10%
+## System Hardening 10%
 - Minimize host OS footprint (reduce attack surface)
 - Using least-privilege identity and access management
 - Minimize external access to the network
