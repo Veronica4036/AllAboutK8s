@@ -181,17 +181,106 @@ Note:
 }
 ```
 
-## 5. Best Practices
+## AppArmor and Security Context in Kubernetes
 
-- Start with the default Docker seccomp profile and customize.
-- Use `strace` to identify necessary syscalls.
-- Test profiles in non-production environments first.
-- Regularly review and update profiles.
+AppArmor is a Linux kernel security module that provides Mandatory Access Control (MAC) for applications. It allows administrators to restrict the capabilities of individual programs, enhancing system security. This document covers AppArmor usage in Kubernetes, related commands, and comparison with other security features.
 
-## 6. Troubleshooting
+## AppArmor Basics
 
-If a container fails to start:
-1. Check container logs for seccomp-related errors.
-2. Use `strace` to identify blocked syscalls.
-3. Temporarily disable the seccomp profile to confirm it's the cause.
-4. Gradually add necessary syscalls to the profile.
+### Checking AppArmor Status
+
+To check if AppArmor is loaded and get profile information:
+
+```bash
+aa-status
+```
+
+This command provides details on:
+- Whether AppArmor is loaded
+- Total number of loaded profiles
+- Profiles in enforce mode
+- Profiles in complain mode
+
+### Common AppArmor Commands
+
+1. `aa-enforce`: Set a profile to enforce mode
+2. `aa-complain`: Set a profile to complain mode
+3. `aa-disable`: Disable a profile
+4. `aa-unconfined`: List processes with no AppArmor profile
+5. `apparmor_parser`: Load or reload AppArmor profiles
+
+### AppArmor Modes
+
+- **Enforce Mode**: Actively prevents profile violations
+- **Complain Mode**: Logs violations but doesn't prevent them
+- **Disabled**: Profile is not applied
+
+## AppArmor in Kubernetes
+
+### Loading a Custom Profile
+
+To load a custom AppArmor profile:
+
+```bash
+sudo apparmor_parser -r -v /etc/apparmor.d/usr.sbin.nginx
+```
+
+### Applying AppArmor to Kubernetes Pods
+
+Use annotations to apply AppArmor profiles to pods:
+
+```yaml
+metadata:
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: localhost/custom-nginx
+```
+
+### Using SecurityContext
+
+Apply AppArmor profiles using `securityContext`:
+
+```yaml
+securityContext:
+  appArmorProfile:
+    type: Localhost
+    localhostProfile: k8s-apparmor-example-deny-write
+```
+
+## Checking Linux Capabilities of Containers
+
+### Method 1: Using `docker inspect`
+
+```bash
+docker inspect --format '{{.State.Pid}}' <container_id>
+cat /proc/<container_pid>/status | grep Cap
+```
+
+### Method 2: Using `capsh`
+
+```bash
+docker exec <container_id> capsh --print
+```
+
+### Method 3: Using `getpcaps`
+
+```bash
+getpcaps <container_pid>
+```
+
+## AppArmor vs. Seccomp
+
+| Feature | AppArmor | Seccomp |
+|---------|----------|---------|
+| Focus | File system access, network operations | System calls |
+| Granularity | Application-specific | System-wide or per-process |
+| Configuration | Profile-based | Syscall filter lists |
+| Kubernetes Integration | Native support | Supported via pod security context |
+
+
+## Further Reading
+
+1. [Kubernetes AppArmor Documentation](https://kubernetes.io/docs/tutorials/security/apparmor/)
+2. [Ubuntu AppArmor Documentation](https://ubuntu.com/server/docs/security-apparmor)
+3. [AppArmor Wiki](https://gitlab.com/apparmor/apparmor/-/wikis/home)
+4. [Linux Capabilities Overview](https://man7.org/linux/man-pages/man7/capabilities.7.html)
+5. [Seccomp in Kubernetes](https://kubernetes.io/docs/tutorials/security/seccomp/)
