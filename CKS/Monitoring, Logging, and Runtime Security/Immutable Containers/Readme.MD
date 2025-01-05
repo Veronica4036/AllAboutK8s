@@ -1,5 +1,3 @@
-Here are comprehensive, well-structured notes on making containers immutable, suitable for a GitHub repository:
-
 # Making Containers Immutable
 
 ## Introduction
