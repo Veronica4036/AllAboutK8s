@@ -151,7 +151,7 @@ This configuration mounts separate volumes for both the logs and run directories
 When trying to make the Apache container work with a read-only filesystem, you might think that mounting '/usr/local' as writable would solve all issues. However, this approach doesn't work as expected. Here's why:
 
 1. File system hierarchy: In the Apache container, the directory structure looks like this:
-
+```
    /usr/local/apache2/
    ├── bin/
    ├── cgi-bin/
@@ -162,7 +162,7 @@ When trying to make the Apache container work with a read-only filesystem, you m
    ├── logs/  <-- Needs to be writable
    ├── modules/
    └── run/   <-- Needs to be writable
-
+```
    Only the 'logs' and 'run' directories need to be writable for Apache to function correctly.
 
 2. Read-only root filesystem behavior: When you set `readOnlyRootFilesystem: true`, Kubernetes mounts the container's root filesystem as read-only before applying any volume mounts.
