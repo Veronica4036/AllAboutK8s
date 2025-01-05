@@ -146,7 +146,7 @@ spec:
 
 This configuration mounts separate volumes for both the logs and run directories, allowing Apache to write to these locations while keeping the rest of the filesystem read-only.
 
-I apologize for not explaining it clearly enough. You're right, we should provide a more concrete explanation with examples. Let's revise that section to make it more understandable:
+
 
 ```
 ### Why mounting just '/usr/local' doesn't solve the problem
