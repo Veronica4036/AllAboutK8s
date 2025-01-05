@@ -146,9 +146,6 @@ spec:
 
 This configuration mounts separate volumes for both the logs and run directories, allowing Apache to write to these locations while keeping the rest of the filesystem read-only.
 
-
-
-```
 ### Why mounting just '/usr/local' doesn't solve the problem
 
 When trying to make the Apache container work with a read-only filesystem, you might think that mounting '/usr/local' as writable would solve all issues. However, this approach doesn't work as expected. Here's why:
@@ -203,11 +200,9 @@ volumeMounts:
 - mountPath: /usr/local/apache2/run
   name: run-volume
 ```
-
 This approach only overlays the specific directories that need to be writable, leaving the rest of the Apache installation intact and read-only.
 
 By mounting volumes only to '/usr/local/apache2/logs' and '/usr/local/apache2/run', we provide the necessary write access without disturbing the rest of the Apache installation. This maintains the benefits of an immutable container while allowing Apache to function correctly.
-```
 
 ## Further Reading
 
