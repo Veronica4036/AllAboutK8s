@@ -323,3 +323,40 @@ apparmor_parser <path to profile>
 ```
 
 
+
+To search for a specific line across multiple files in your current directory, you can use the `grep` command in Unix-like systems (Linux, macOS, etc.). Here's an easy way to do it:
+
+```
+grep "search_term" *
+```
+
+This command will search for "search_term" in all files in the current directory. Replace "search_term" with the actual line or text you're looking for.
+
+If you want to search only specific file types or have more control, you can use:
+
+1. For specific file extensions (e.g., .txt files):
+   ```
+   grep "search_term" *.txt
+   ```
+
+2. To search recursively in all subdirectories:
+   ```
+   grep -r "search_term" .
+   ```
+
+3. To display file names and line numbers:
+   ```
+   grep -n "search_term" *
+   ```
+
+4. To make the search case-insensitive:
+   ```
+   grep -i "search_term" *
+   ```
+
+5. If you know the exact names of the four files:
+   ```
+   grep "search_term" file1.txt file2.txt file3.txt file4.txt
+   ```
+
+These commands will display the matching lines along with the file names where they were found. Choose the option that best fits your needs.
