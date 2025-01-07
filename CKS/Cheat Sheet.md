@@ -1,42 +1,5 @@
 # CKS CheatSheet
 
-
-[Image: image.png]
-
-### Set few shortcuts:
-
-```
-vim ~/.vimrc
-
-set expandtab
-set tabstop=2
-set shiftwidth=2
-
-source ~/.vimrc
-
-===================
-
-vim ~/.bashrc
-
-alias k=kubectl
-alias kgn="kubectl get nodes"
-alias kgp="kubectl get pods"
-alias kgks="kubectl get pods -n kube-system"
-alias kdp="kubectl delete pod"
-alias kg="kubectl get"
-alias kdel="kubectl delete"
-alias kd="kubectl describe"
-alias ke="kubectl edit"
-alias kc="kubectl create"
-alias ka="kubectl apply -f"
-alias kdy="kubectl -o yaml --dry-run=client"
-
-source ~/.bashrc
-```
-
-
-
-
 ## Docker basic
 
 1. docker ps -a (list all containers)
@@ -45,10 +8,6 @@ source ~/.bashrc
 4. `docker run --name=<name> <image name> <command>`
 5. docker run --name app2 --pid=container:app1 -d nginx:alpine sleep infinity #(Run second container in first containers PID namespace)
 6. docker inspect <image> (to get some details like pid)
-
-
-
-
 
 ## Some Basic but not so frequently used commands:
 
@@ -65,6 +24,13 @@ Send file from CP to node
 scp /root/profile node01:/root
 ```
 
+How to run kubectl commands inside the node
+
+
+first SSH into the node. Then, set the KUBECONFIG environment variable to the kubelet configuration file with:
+```
+export KUBECONFIG=/etc/kubernetes/kubelet.conf
+```
 
 tr means replace
 
