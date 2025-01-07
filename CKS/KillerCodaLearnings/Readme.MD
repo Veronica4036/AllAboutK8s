@@ -29,13 +29,7 @@ Here, we'll cover some good to know things, which are not part of any module
    Location: Container logs (crictl logs)
 
 3. **Invalid YAML in Manifest**
-   ```yaml
-   apiVersion: v1
-   kind: Pod
-   metadata;
-     annotations:
-       kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 172.30.1.2:6443
-   ```
+
    Error: `Could not process manifest file err="...couldn't parse as pod..."`
    Location: Kubelet logs (/var/log/syslog or journalctl)
 
@@ -56,7 +50,13 @@ Here, we'll cover some good to know things, which are not part of any module
       ```bash
       cat /etc/kubernetes/manifests/kube-apiserver.yaml | head -n 5
       ```
-
+   ```yaml
+   apiVersion: v1
+   kind: Pod
+   metadata;
+     annotations:
+       kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 172.30.1.2:6443
+   ```
    Note: If you don't find container or pod logs, it often indicates a YAML issue.
 
 ### Key Log Locations
