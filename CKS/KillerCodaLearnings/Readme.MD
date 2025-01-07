@@ -30,15 +30,6 @@ Here, we'll cover some good to know things, which are not part of any module
 
 3. **Invalid YAML in Manifest**
    ```yaml
-   apiVersionTHIS IS VERY ::::: WRONG v1
-   ```
-   Error: `Could not process manifest file err="...couldn't parse as pod..."`
-   Location: Kubelet logs (/var/log/syslog or journalctl)
-
-You're absolutely right. I'll add the log lines to provide a more concrete example. Here's the updated section:
-
-3. **Invalid YAML in Manifest**
-   ```yaml
    apiVersion: v1
    kind: Pod
    metadata;
@@ -49,9 +40,11 @@ You're absolutely right. I'll add the log lines to provide a more concrete examp
    Location: Kubelet logs (/var/log/syslog or journalctl)
 
    To troubleshoot:
-   a. Check syslog:
+   a. Check syslog/journalctl:
       ```bash
       cat /var/log/syslog | grep -i "manifest" | head -n 2
+      (OR)
+      journalctl | grep apiserver | grep manifest | head -n 2
       ```
       Example output:
       ```
@@ -59,17 +52,7 @@ You're absolutely right. I'll add the log lines to provide a more concrete examp
       Jan  7 04:57:15 controlplane kubelet[1730]: E0107 04:57:15.745994    1730 file.go:108] "Unable to process watch event" err="can't process config file \"/etc/kubernetes/manifests/kube-apiserver.yaml\": /etc/kubernetes/manifests/kube-apiserver.yaml: couldn't parse as pod(yaml: line 4: could not find expected ':'), please check config file"
       ```
 
-   b. Check journalctl:
-      ```bash
-      journalctl | grep apiserver | grep manifest | head -n 2
-      ```
-      Example output:
-      ```
-      Jan 07 04:57:15 controlplane kubelet[1730]: E0107 04:57:15.745994    1730 file.go:108] "Unable to process watch event" err="can't process config file \"/etc/kubernetes/manifests/kube-apiserver.yaml\": /etc/kubernetes/manifests/kube-apiserver.yaml: couldn't parse as pod(yaml: line 4: could not find expected ':'), please check config file"
-      Jan 07 04:57:26 controlplane kubelet[1730]: E0107 04:57:26.736754    1730 file.go:187] "Could not process manifest file" err="/etc/kubernetes/manifests/kube-apiserver.yaml: couldn't parse as pod(yaml: line 4: could not find expected ':'), please check config file" path="/etc/kubernetes/manifests/kube-apiserver.yaml"
-      ```
-
-   c. Inspect the manifest:
+   b. Inspect the manifest:
       ```bash
       cat /etc/kubernetes/manifests/kube-apiserver.yaml | head -n 5
       ```
