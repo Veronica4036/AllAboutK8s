@@ -15,7 +15,7 @@ Here, we'll cover some good to know things, which are not part of any module
        - --this-is-very-wrong
    ```
    Error: `Error: unknown flag: --this-is-very-wrong`
-   Location:  Container logs (crictl logs)  `/var/log/containers/kube-apiserver-*.log` or Pod logs `/var/log/pods/kube-system_kube-apiserver-*/kube-apiserver/*.log`
+   Location: Container logs (crictl logs) `/var/log/containers/kube-apiserver-*.log` or Pod logs `/var/log/pods/kube-system_kube-apiserver-*/kube-apiserver/*.log`
 
 2. **Misconfigured etcd Connection**
    ```yaml
@@ -26,11 +26,11 @@ Here, we'll cover some good to know things, which are not part of any module
        - --etcd-servers=this-is-very-wrong
    ```
    Error: `Error while dialing dial tcp: address this-is-very-wrong: missing port in address`
-   Location:  Container logs (crictl logs)  `/var/log/containers/kube-apiserver-*.log` or Pod logs `/var/log/pods/kube-system_kube-apiserver-*/kube-apiserver/*.log`
+   Location: Container logs (crictl logs) `/var/log/containers/kube-apiserver-*.log` or Pod logs `/var/log/pods/kube-system_kube-apiserver-*/kube-apiserver/*.log`
 
 3. **Invalid YAML in Manifest**
 
-If you don't find container or pod logs, it often indicates a YAML issue.
+   If you don't find container or pod logs, it often indicates a YAML issue.
 
    Error: `Could not process manifest file err="...couldn't parse as pod..."`
    Location: Kubelet logs (/var/log/syslog or journalctl)
@@ -50,14 +50,13 @@ If you don't find container or pod logs, it often indicates a YAML issue.
 
    b. Inspect the manifest:
       ```bash
-   cat /etc/kubernetes/manifests/kube-apiserver.yaml | head -n 5
-   apiVersion: v1
-   kind: Pod
-   metadata;
-     annotations:
-       kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 172.30.1.2:6443
-   ```
-   
+      cat /etc/kubernetes/manifests/kube-apiserver.yaml | head -n 5
+      apiVersion: v1
+      kind: Pod
+      metadata;
+        annotations:
+          kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 172.30.1.2:6443
+      ```
 
 ### Key Log Locations
 
