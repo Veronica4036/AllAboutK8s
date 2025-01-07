@@ -28,6 +28,22 @@ Here, we'll cover some good to know things, which are not part of any module
    Error: `Error while dialing dial tcp: address this-is-very-wrong: missing port in address`
    Location: Container logs (crictl logs) `/var/log/containers/kube-apiserver-*.log` or Pod logs `/var/log/pods/kube-system_kube-apiserver-*/kube-apiserver/*.log`
 
+   ```yaml
+   spec:
+     containers:
+     - command:
+       - kube-apiserver
+       - --etcd-servers=https://127.0.0.1:23000  # Incorrect port
+   ```
+   Error in logs: 
+   ```
+   grpc: addrConn.createTransport failed to connect to {Addr: "127.0.0.1:23000", ServerName: "127.0.0.1:23000", }. Err: connection error: desc = "transport: Error 
+   while dialing: dial tcp 127.0.0.1:23000: connect: connection refused"
+   ```
+   Fix: Change etcd server port to 2379 in kube-apiserver.yaml
+   
+   *Note* - GRPC connection errors often indicate etcd communication issues.
+
 3. **Invalid YAML in Manifest**
 
    If you don't find container or pod logs, it often indicates a YAML issue.
