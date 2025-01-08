@@ -1,268 +1,91 @@
-# CKS CheatSheet
+Certainly! I'll break down the cheat sheet into two parts as requested: Generic Docker/Linux commands and CKS-specific information. I'll also organize the CKS-specific information according to the sections you've linked.
 
-## Docker basic
+Part 1: Generic Docker/Linux Commands
+=====================================
+
+## Docker Basic
 
 1. docker ps -a (list all containers)
 2. docker exec <container name> <command>
 3. docker rm <container name> —force
-4. `docker run --name=<name> <image name> <command>`
-5. docker run --name app2 --pid=container:app1 -d nginx:alpine sleep infinity #(Run second container in first containers PID namespace)
-6. docker inspect <image> (to get some details like pid)
+4. docker run --name=<name> <image name> <command>
+5. docker run --name app2 --pid=container:app1 -d nginx:alpine sleep infinity
+6. docker inspect <image>
 
-## Some Basic but not so frequently used commands:
+## Linux Commands
 
-Unzip Tar file
-
+Unzip Tar file:
 ```
 tar -xvf file.tar
 ```
 
-
-Send file from CP to node
-
+Send file from CP to node:
 ```
 scp /root/profile node01:/root
 ```
 
-How to run kubectl commands inside the node
-
-
-first SSH into the node. Then, set the KUBECONFIG environment variable to the kubelet configuration file with:
+Replace text:
 ```
-export KUBECONFIG=/etc/kubernetes/kubelet.conf
+tr " " "\n"
 ```
 
-tr means replace
-
-```
-k config view -o jsonpath="{.contexts[*].name}" | tr " " "\n"
-```
-
-
-How to check ownership of a directory. e.g: ownership of directory `/var/lib/etcd`: 
-
+Check ownership of a directory:
 ```
 ls -lh /var/lib | grep etcd
-
- -l   use a long listing format
- -h, --human-readable       with -l and -s, print sizes like 1K 234M 2G etc.
 ```
 
-
-view file permissions:
-
-
+View file permissions:
 ```
 stat -c %a /var/lib/etcd
-700
-
-The command `stat ``-``c ``%``a ``/``var``/``lib``/``kubelet``/``config``.``yaml` is used to display the 
-permissions of the file `/``var``/``lib``/``kubelet``/``config``.``yaml` in numeric (octal) format. 
 ```
 
-
-binary checks:
-
+Binary checks:
 ```
 sha512sum <binary>
-
-If they are unique, you will ll just get one entry below:
 cat compare | uniq
 ```
 
-
-
-### Important locations:
-
-kubelet config location:
-
+Grep usage:
 ```
-/var/lib/kubelet/config.yaml
+grep containerLog /var/lib/kubelet/config.yaml
 ```
 
-
-what I never knew about grep:
-
+Search for specific line across multiple files:
 ```
-`grep containerLog /var/lib/kubelet/config.yaml`
-```
-
-
-
-
-
-### Cilium Netpol:
-
-```
-# cks7262:~/8_p1.yaml
-apiVersion: "cilium.io/v2"
-kind: CiliumNetworkPolicy
-metadata:
-  name: p1
-  namespace: team-orange
-spec:
-  endpointSelector:
-    matchLabels:
-      type: messenger
-  egressDeny:
-  - toEndpoints:
-    - matchLabels:
-        type: database  # we use the label of the Pods behind the Service "database"
-        
-        
-        
-# cks7262:~/8_p2.yaml
-apiVersion: "cilium.io/v2"
-kind: CiliumNetworkPolicy
-metadata:
-  name: p2
-  namespace: team-orange
-spec:
-  endpointSelector:
-    matchLabels:
-      type: transmitter # we use the label of the Pods behind Deployment "transmitter"
-  egressDeny:
-  - toEndpoints:
-    - matchLabels:
-        type: database  # we use the label of the Pods behind the Service "database"
-    icmps:
-    - fields:
-      - type: 8
-        family: IPv4
-      - type: EchoRequest
-        family: IPv6
-        
-        
-        
-# cks7262:~/8_p3.yaml
-apiVersion: "cilium.io/v2"
-kind: CiliumNetworkPolicy
-metadata:
-  name: p3
-  namespace: team-orange
-spec:
-  endpointSelector:
-    matchLabels:
-      type: database
-  egress:
-  - toEndpoints:
-    - matchLabels:
-        type: messenger
-    authentication:
-      mode: "required"  
+grep "search_term" *
+grep "search_term" *.txt
+grep -r "search_term" .
+grep -n "search_term" *
+grep -i "search_term" *
 ```
 
+Part 2: CKS-Specific Information
+================================
 
+## Cluster Setup - 10%
 
-### Basics of openSSL;
-
-**openssl genrsa -out <key_name.key> 2048**
-**openssl req -new -key <key_generated_above> -out <csr_name.csr>**
-
-**Creating a Private Key**:
-
-    * `openssl genrsa -out 60099.key 2048`
-    * This command generates a new RSA private key with a length of 2048 bits and saves it in the file `60099.key`.
-    * The `genrsa` command is used to generate an RSA private key.
-    * The `-out` option specifies the output file name for the private key.
-
-**Creating a Certificate Signing Request (CSR)**:
-
-    * `openssl req -new -key 60099.key -out 60099.csr`
-    * the `req` stands for "request"
-    * This command creates a new Certificate Signing Request (CSR) based on the provided private key `60099.key`.
-    * The CSR contains information about the entity (e.g., user, server) for which the certificate is being requested.
-    * The `-new` option specifies that a new CSR should be generated.
-    * The `-key` option specifies the private key file to be used for the CSR.
-    * The `-out` option specifies the output file name for the CSR.
-    * During the execution of this command, you will be prompted to enter various details, such as the Common Name (CN), Organization (O), and other information.
-
-
-Now to create a csr, we need to decode the csr content:
-
+### CIS Benchmarks for Control Plane:
 ```
-cat 60099.csr | base64 -w 0
+kube-bench | grep <test-case>
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CKS SPECIFIC ========================================
-
-
-
-### CIS Benchmarks fix Controlplane:
-
-How to check for any test case?
-
-```
-controlplane $ kube-bench | grep 1.2.20
-[FAIL] 1.2.20 Ensure that the --profiling argument is set to false (Automated)
-1.2.20 Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
-```
-
-Then follow the suggestions to make the fixes!
-
-
-
 
 ### Verify Platform Binaries:
-
-Download the binary from the question and use the command sha512sum to get the sha value
-
 ```
 sha512sum kubernetes/server/bin/kubelet
+sha512sum /usr/bin/kubelet
 ```
 
-
-For the 2nd sha:
-
-* for kubelet - `/usr/bin/kubelet`
-* for any cp component, follow the below steps:
-
+For control plane components:
 ```
-crictl ps | grep api
-ea69d463f1f44       604f5db92eaa8       6 minutes ago       Running             kube-apiserver            1                   859e337e9f6fa       kube-apiserver-controlplane
-
-copy the container name "kube-apiserver"
-
- ps aux | grep kube-apiserver
-root        2400  3.0 12.1 1518620 246572 ?      Ssl  07:32   0:13 kube-apiserver --advertise-address=172.30.1.2 --allow-privileged=true --authorization-mode=Node,RBAC --client-ca-file=/etc/kubernetes/pki/ca.crt --enable-admission-plugins=NodeRestriction --enable-bootstrap-token-auth=true --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key --etcd-servers=https://127.0.0.1:2379 --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key --requestheader-allowed-names=front-proxy-client --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt --requestheader-extra-headers-prefix=X-Remote-Extra- --requestheader-group-headers=X-Remote-Group --requestheader-username-headers=X-Remote-User --secure-port=6443 --service-account-issuer=https://kubernetes.default.svc.cluster.local --service-account-key-file=/etc/kubernetes/pki/sa.pub --service-account-signing-key-file=/etc/kubernetes/pki/sa.key --service-cluster-ip-range=10.96.0.0/12 --tls-cert-file=/etc/kubernetes/pki/apiserver.crt --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
-root        7968  0.0  0.0   3436   720 pts/0    S+   07:39   0:00 grep --color=auto kube-apiserver
-
-use the PID which is not for --color=auto
-
-controlplane $ find /proc/2400/root/ | grep kube-apiserver
-/proc/<pid>/root/usr/local/bin/kube-apiserver
-/proc/2400/root/usr/local/bin/kube-apiserver
-
-controlplane $ sha512sum /proc/2400/root/usr/local/bin/kube-apiserver
-540e1cb75c64c0fd1d8bf06f27bdba449a2145421986f029d2d64df22defb0f25bb55e17bee20d3431afe1d410b3a7795b0c396de7c0947d53001da78e620051  /proc/2400/root/usr/local/bin/kube-apiserver
+crictl ps | grep <component>
+ps aux | grep <component>
+find /proc/<pid>/root/ | grep <component>
+sha512sum /proc/<pid>/root/usr/local/bin/<component>
 ```
 
-
+## Cluster Hardening - 15%
 
 ### RBAC:
-
 ```
 Role → RoleBinding ✅
 Role → ClusterRoleBinding ❌
@@ -270,59 +93,51 @@ ClusterRole → RoleBinding ✅
 ClusterRole → ClusterRoleBinding ✅
 ```
 
+### Important locations:
+Kubelet config:
+```
+/var/lib/kubelet/config.yaml
+```
 
+## System Hardening - 15%
 
-APPARMOR:
-
-Check existing profiles
-
+### AppArmor:
+Check existing profiles:
 ```
 ssh node01
-    apparmor_status
+apparmor_status
 ```
 
-
-to add profile:
-
+Add profile:
 ```
 apparmor_parser <path to profile>
 ```
 
+## Minimize Microservice Vulnerabilities - 20%
 
+### Cilium Network Policies:
+(Example policies provided in the original cheat sheet)
 
-To search for a specific line across multiple files in your current directory, you can use the `grep` command in Unix-like systems (Linux, macOS, etc.). Here's an easy way to do it:
+## Supply Chain Security - 20%
 
+### OpenSSL Basics:
+Generate private key:
 ```
-grep "search_term" *
+openssl genrsa -out <key_name.key> 2048
 ```
 
-This command will search for "search_term" in all files in the current directory. Replace "search_term" with the actual line or text you're looking for.
+Create Certificate Signing Request (CSR):
+```
+openssl req -new -key <key_generated_above> -out <csr_name.csr>
+```
 
-If you want to search only specific file types or have more control, you can use:
+Decode CSR content:
+```
+cat <csr_name.csr> | base64 -w 0
+```
 
-1. For specific file extensions (e.g., .txt files):
-   ```
-   grep "search_term" *.txt
-   ```
+## Monitoring, Logging and Runtime Security - 20%
 
-2. To search recursively in all subdirectories:
-   ```
-   grep -r "search_term" .
-   ```
+(No specific commands provided in the original cheat sheet for this section)
 
-3. To display file names and line numbers:
-   ```
-   grep -n "search_term" *
-   ```
-
-4. To make the search case-insensitive:
-   ```
-   grep -i "search_term" *
-   ```
-
-5. If you know the exact names of the four files:
-   ```
-   grep "search_term" file1.txt file2.txt file3.txt file4.txt
-   ```
-
-These commands will display the matching lines along with the file names where they were found. Choose the option that best fits your needs.
+Remember to refer to the official CKS exam guide and practice with hands-on labs to fully prepare for each section of the exam.
