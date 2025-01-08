@@ -13,6 +13,54 @@ Docker is a platform for developing, shipping, and running applications in conta
 5. [Common Pitfalls](#common-pitfalls)
 6. [Further Reading](#further-reading)
 
+# Docker Command Line Tips: Interactive Help and Auto-completion
+
+Before diving into specific Docker commands and best practices, it's crucial to know how to leverage Docker's built-in help and auto-completion features. These tools can significantly enhance your Docker experience by providing interactive assistance as you construct commands.
+
+## Using Auto-completion for Command Options
+
+Docker's command-line interface offers dynamic auto-completion, which can guide you through available options without needing to memorize them. Here's how to use it:
+
+1. Start typing a Docker command, for example:
+   ```
+   docker run -d --name myapp
+   ```
+
+2. When you reach a point where you need to specify an option (like `--pid`), type the option and press Tab:
+   ```
+   docker run -d --name myapp --pid[TAB]
+   ```
+
+3. Docker will show you the available choices. For `--pid`, you might see:
+   ```
+    docker run -d --name myapp --pid
+    --pid         --pids-limit  
+   ```
+
+4. You can then continue typing or use arrow keys to select the appropriate option.
+
+This method works for various Docker command options, not just `--pid`.
+
+## Example: Exploring PID Namespace Options
+
+Let's walk through an example using the `--pid` option:
+
+```
+controlplane $ docker run -d --name appss --pid[TAB]
+--pid         --pids-limit  
+
+controlplane $ docker run -d --name appss --pid [TAB]
+container:  host
+```
+
+In this interaction:
+1. Pressing Tab after `--pid` initially shows two options: `--pid` and `--pids-limit`.
+2. Space after `--pid` and pressing Tab again reveals the available choices: `container:` and `host`.
+
+This interactive approach allows you to explore and use Docker commands correctly without memorizing all the options and their syntax.
+
+By leveraging these built-in features, you can confidently construct complex Docker commands, even if you're not familiar with all the available options. This method is particularly useful for options that are not frequently used or have multiple possible values.
+
 ## Basic Docker Commands
 
 ### Listing Containers
