@@ -12,6 +12,68 @@ Part 1: Generic Docker/Linux Commands
 5. docker run --name app2 --pid=container:app1 -d nginx:alpine sleep infinity
 6. docker inspect <image>
 
+
+## DevOps: Optimizing Dockerfiles for Security and Efficiency
+
+### Introduction
+
+This guide focuses on optimizing a Dockerfile for security and efficiency. We'll cover best practices for building Docker images, including version specificity, layer caching, secret management, and container security.
+
+### Main Content
+
+#### 1. Base Image Version Specificity
+
+Always use specific versions for base images to ensure reproducibility and consistency.
+
+```dockerfile
+FROM ubuntu:20.04
+```
+
+#### 2. Optimizing Layer Caching
+
+Combine related commands to reduce the number of layers and optimize caching.
+
+```dockerfile
+RUN apt-get update && apt-get install -y curl
+```
+
+#### 3. Secret Management
+
+Use environment variables to pass secrets at runtime instead of hardcoding them in the Dockerfile.
+
+```dockerfile
+ENV URL https://google.com/this-will-fail?secret-token=
+CMD ["sh", "-c", "curl --head $URL$TOKEN"]
+```
+
+#### 4. Preventing Exec Access
+
+Remove unnecessary shells or use minimal base images to enhance security.
+
+```dockerfile
+RUN rm /usr/bin/bash
+```
+
+### Complete Optimized Dockerfile
+
+```dockerfile
+FROM ubuntu:20.04
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+ENV URL https://google.com/this-will-fail?secret-token=
+RUN rm /usr/bin/bash
+CMD ["sh", "-c", "curl --head $URL$TOKEN"]
+```
+
+### Building and Running the Container
+
+```bash
+# Build the image
+podman build -t app .
+
+# Run the container with a secret token
+podman run -e TOKEN=2e064aad-3a90-4cde-ad86-16fad1f8943e app
+```
+
 ## Linux Commands
 
 Unzip Tar file:
@@ -66,9 +128,21 @@ Part 2: CKS-Specific Information
 
 ### CIS Benchmarks for Control Plane:
 ```
-kube-bench | grep <test-case>
+kube-bench | grep <test-case>       ❌
+kube-bench --check="1.2.21,1.2.22"  ✅
 ```
 
+Run all the checks under this comma-delimited list of groups. Example --group="1.2"
+```
+controlplane $ kube-bench --group="1.2"       
+[INFO] 1 Master Node Security Configuration
+[INFO] 1.2 API Server
+[WARN] 1.2.1 Ensure that the --anonymous-auth argument is set to false (Manual)
+[PASS] 1.2.2 Ensure that the --token-auth-file parameter is not set (Automated)
+```
+
+
+ 
 ### Verify Platform Binaries:
 ```
 sha512sum kubernetes/server/bin/kubelet
