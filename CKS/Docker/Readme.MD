@@ -13,65 +13,63 @@ Docker is a platform for developing, shipping, and running applications in conta
 5. [Common Pitfalls](#common-pitfalls)
 6. [Further Reading](#further-reading)
 
+Thank you for providing this detailed interaction. It's an excellent example of how Docker's auto-completion works in practice. Let's use this to create a more accurate and comprehensive guide on using Docker's auto-completion feature:
+
 # Docker Command Line Tips: Interactive Help and Auto-completion
 
-Before diving into specific Docker commands and best practices, it's crucial to know how to leverage Docker's built-in help and auto-completion features. These tools can significantly enhance your Docker experience by providing interactive assistance as you construct commands.
+Docker's command-line interface offers powerful auto-completion features that can significantly enhance your productivity and accuracy when working with Docker commands. Here's a step-by-step guide on how to use it effectively:
 
 ## Using Auto-completion for Command Options
 
-Docker's command-line interface offers dynamic auto-completion, which can guide you through available options without needing to memorize them. Here's how to use it effectively:
-
-1. Start typing a Docker command, for example:
+1. Start your Docker command:
    ```
-   docker run -d --name myapp
+   docker run -d --name app2
    ```
 
-2. When you reach a point where you need to specify an option (like `--pid`), type the option and press Tab:
+2. When you reach an option like `--pid`, type it and press Tab:
    ```
-   docker run -d --name myapp --pid[TAB]
+   controlplane $ docker run -d --name app2 --pid[TAB]
+   --pid         --pids-limit  
    ```
+   This shows you the available options starting with `--pid`.
 
-3. Docker will show you the available choices. For `--pid`, you'll see:
+3. If you choose `--pid` and press Tab again:
    ```
-   container:  host
+   controlplane $ docker run -d --name app2 --pid[TAB]
+   container:  host        
    ```
+   This displays the two main options for the `--pid` flag.
 
-4. You can then continue typing or use arrow keys to select the appropriate option.
-
-## Example: Exploring PID Namespace Options
-
-Let's walk through an example using the `--pid` option:
-
-```
-controlplane $ docker run -d --name appss --pid[TAB]
-container:  host
-```
-
-In this interaction:
-- Pressing Tab after `--pid` reveals the two main options: `container:` and `host`.
-- You can then complete the command based on your needs:
-  - For host PID namespace: `--pid host`
-  - For container PID namespace: `--pid container:` followed by the container name
-
-## Practical Usage
-
-Here are examples of how to use these options correctly:
-
-1. Sharing PID namespace with the host:
+4. If you choose `container:` and press Tab:
    ```
-   docker run -d --name apps --pid host nginx:alpine
+   controlplane $ docker run -d --name app2 --pid container:[TAB]
+   app1   app2   apps   sapp1  
+   ```
+   This shows a list of available container names you can connect to.
+
+5. Complete your command by selecting a container and adding the image name:
+   ```
+   controlplane $ docker run -d --name app2 --pid container:sapp1 nginx
+   9a797ba835a2ead40e054d9fe444f4767e0e7166097d15a4cad3e3fab1106f37
    ```
 
-2. Sharing PID namespace with another container:
-   ```
-   docker run -d --name app2 --pid container:app1 nginx:alpine
-   ```
+## Key Points to Remember
 
-This auto-completion feature works for various Docker command options, not just `--pid`. It's a powerful tool for constructing Docker commands accurately and efficiently.
+1. Double-tabbing after an option often reveals more specific choices.
+2. The auto-completion can show you:
+   - Available flag options (like `--pid` vs `--pids-limit`)
+   - Specific choices for a flag (like `container:` or `host` for `--pid`)
+   - Existing resources (like container names when using `--pid container:`)
+3. Auto-completion helps prevent typos and syntax errors.
+4. It can also remind you of available options you might have forgotten.
 
-By leveraging these built-in features, you can confidently construct complex Docker commands, even if you're not familiar with all the available options. This method is particularly useful for options that are not frequently used or have multiple possible values.
+## Practical Tips
 
-Remember, while auto-completion is extremely helpful, always verify the complete syntax if you encounter any errors or unexpected behavior.
+- Use Tab completion frequently to explore available options.
+- If you're unsure about a command's syntax, start typing and use Tab to see what's available.
+- Remember that auto-completion can show you container names, image names, and more, depending on the context.
+
+By leveraging these auto-completion features, you can construct Docker commands more quickly and with fewer errors, even when dealing with complex options or when you're not entirely familiar with all available choices.
 
 ## Basic Docker Commands
 
