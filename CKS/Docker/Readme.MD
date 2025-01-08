@@ -19,7 +19,7 @@ Before diving into specific Docker commands and best practices, it's crucial to 
 
 ## Using Auto-completion for Command Options
 
-Docker's command-line interface offers dynamic auto-completion, which can guide you through available options without needing to memorize them. Here's how to use it:
+Docker's command-line interface offers dynamic auto-completion, which can guide you through available options without needing to memorize them. Here's how to use it effectively:
 
 1. Start typing a Docker command, for example:
    ```
@@ -31,15 +31,12 @@ Docker's command-line interface offers dynamic auto-completion, which can guide 
    docker run -d --name myapp --pid[TAB]
    ```
 
-3. Docker will show you the available choices. For `--pid`, you might see:
+3. Docker will show you the available choices. For `--pid`, you'll see:
    ```
-    docker run -d --name myapp --pid
-    --pid         --pids-limit  
+   container:  host
    ```
 
 4. You can then continue typing or use arrow keys to select the appropriate option.
-
-This method works for various Docker command options, not just `--pid`.
 
 ## Example: Exploring PID Namespace Options
 
@@ -47,19 +44,34 @@ Let's walk through an example using the `--pid` option:
 
 ```
 controlplane $ docker run -d --name appss --pid[TAB]
---pid         --pids-limit  
-
-controlplane $ docker run -d --name appss --pid [TAB]
 container:  host
 ```
 
 In this interaction:
-1. Pressing Tab after `--pid` initially shows two options: `--pid` and `--pids-limit`.
-2. Space after `--pid` and pressing Tab again reveals the available choices: `container:` and `host`.
+- Pressing Tab after `--pid` reveals the two main options: `container:` and `host`.
+- You can then complete the command based on your needs:
+  - For host PID namespace: `--pid host`
+  - For container PID namespace: `--pid container:` followed by the container name
 
-This interactive approach allows you to explore and use Docker commands correctly without memorizing all the options and their syntax.
+## Practical Usage
+
+Here are examples of how to use these options correctly:
+
+1. Sharing PID namespace with the host:
+   ```
+   docker run -d --name apps --pid host nginx:alpine
+   ```
+
+2. Sharing PID namespace with another container:
+   ```
+   docker run -d --name app2 --pid container:app1 nginx:alpine
+   ```
+
+This auto-completion feature works for various Docker command options, not just `--pid`. It's a powerful tool for constructing Docker commands accurately and efficiently.
 
 By leveraging these built-in features, you can confidently construct complex Docker commands, even if you're not familiar with all the available options. This method is particularly useful for options that are not frequently used or have multiple possible values.
+
+Remember, while auto-completion is extremely helpful, always verify the complete syntax if you encounter any errors or unexpected behavior.
 
 ## Basic Docker Commands
 
