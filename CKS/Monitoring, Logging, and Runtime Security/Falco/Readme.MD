@@ -4,6 +4,16 @@
 
 Falco is an open-source, cloud-native runtime security tool designed to detect and alert on anomalous activity in containers, Kubernetes clusters, and cloud applications. It uses a powerful and flexible rules engine to identify suspicious behavior and potential security threats in real-time.
 
+## How to find rules like a pro:
+```
+controlplane $ cd /etc/falco/
+controlplane $ ls
+aws_cloudtrail_rules.yaml  falco.yaml  falco_rules.local.yaml  falco_rules.yaml  k8s_audit_rules.yaml  rules.available  rules.d
+ grep -n "A shell was spawned in a" *.yaml
+falco_rules.yaml:2024:    A shell was spawned in a container with an attached terminal (user=%user.name user_loginuid=%user.loginuid %container.info
+controlplane $ vi +2024 falco_rules.yaml
+```
+
 ## Key Components
 
 ### Rules
