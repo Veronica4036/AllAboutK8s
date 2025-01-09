@@ -1,3 +1,18 @@
+ bom generate --image registry.k8s.io/kube-apiserver:v1.31.0 --format json --output /opt/course/18/sbom1.json
+
+➜ candidate@cks8930:~$ trivy image --help | grep format
+  $ trivy image --format json --output result.json alpine:3.15
+  # Generate a report in the CycloneDX format
+  $ trivy image --format cyclonedx --output result.cdx alpine:3.15
+  -f, --format string              format (table,json,template,sarif,cyclonedx,spdx,spdx-json,github,cosign-vuln) (default "table")
+...
+
+➜ candidate@cks8930:~$ trivy image --format cyclonedx --output /opt/course/18/sbom2.json registry.k8s.io/kube-controller-manager:v1.31.0
+
+
+
+
+
 sbom format
 - spdx 
 - cycloneDX
