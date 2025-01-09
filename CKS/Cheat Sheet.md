@@ -221,3 +221,41 @@ aws_cloudtrail_rules.yaml  falco.yaml  falco_rules.local.yaml  falco_rules.yaml 
 falco_rules.yaml:2024:    A shell was spawned in a container with an attached terminal (user=%user.name user_loginuid=%user.loginuid %container.info
 controlplane $ vi +2024 falco_rules.yaml
 ```
+
+
+# from MOCK
+
+## SBOM/TRIVY
+ bom generate --image registry.k8s.io/kube-apiserver:v1.31.0 --format json --output /opt/course/18/sbom1.json
+
+➜ candidate@cks8930:~$ trivy image --help | grep format
+  $ trivy image --format json --output result.json alpine:3.15
+  # Generate a report in the CycloneDX format
+  $ trivy image --format cyclonedx --output result.cdx alpine:3.15
+  -f, --format string              format (table,json,template,sarif,cyclonedx,spdx,spdx-json,github,cosign-vuln) (default "table")
+...
+
+➜ candidate@cks8930:~$ trivy image --format cyclonedx --output /opt/course/18/sbom2.json registry.k8s.io/kube-controller-manager:v1.31.0
+
+
+## AUDITING
+
+# cks3477:/etc/kubernetes/audit/policy.yaml
+apiVersion: audit.k8s.io/v1
+kind: Policy
+rules:
+
+# log Secret resources audits, level Metadata
+- level: Metadata
+  resources:
+  - group: ""
+    resources: ["secrets"]
+
+# log node related audits, level RequestResponse
+- level: RequestResponse
+  userGroups: ["system:nodes"]
+
+# for everything else don't log anything 
+- level: None
+
+- 
