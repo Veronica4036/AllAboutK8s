@@ -212,6 +212,12 @@ cat <csr_name.csr> | base64 -w 0
 
 ## Monitoring, Logging and Runtime Security - 20%
 
-(No specific commands provided in the original cheat sheet for this section)
-
-Remember to refer to the official CKS exam guide and practice with hands-on labs to fully prepare for each section of the exam.
+ How to find falco rules like a pro:
+```
+controlplane $ cd /etc/falco/
+controlplane $ ls
+aws_cloudtrail_rules.yaml  falco.yaml  falco_rules.local.yaml  falco_rules.yaml  k8s_audit_rules.yaml  rules.available  rules.d
+ grep -n "A shell was spawned in a" *.yaml
+falco_rules.yaml:2024:    A shell was spawned in a container with an attached terminal (user=%user.name user_loginuid=%user.loginuid %container.info
+controlplane $ vi +2024 falco_rules.yaml
+```
