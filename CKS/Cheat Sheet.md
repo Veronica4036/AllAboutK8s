@@ -1,5 +1,3 @@
-Certainly! I'll break down the cheat sheet into two parts as requested: Generic Docker/Linux commands and CKS-specific information. I'll also organize the CKS-specific information according to the sections you've linked.
-
 Part 1: Generic Docker/Linux Commands
 =====================================
 
