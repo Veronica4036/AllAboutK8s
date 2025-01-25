@@ -7,15 +7,15 @@
 
 ```
 Process A (e.g. Kubernetes)          Process B (e.g. Docker)
-+-------------------+                +------------------+
-|                   |                |                  |
-|  Wants to run     |                |  Actually runs   |
-|  containers       |                |  containers      |
-|                   |                |                  |
-+--------+----------+                +---------+--------+
-         |                                    |
-         |           SOCKET                   |
-         |        +----------+               |
++-------------------+                +-----------------+
+|                   |                |                 |
+|  Wants to run     |                |  Actually runs  |
+|  containers       |                |  containers     |
+|                   |                |                 |
++--------+----------+                +-------+---------+
+         |                                   |
+         |           SOCKET                  |
+         |        +----------+               |  
          +------->|          |<--------------+
                   | /var/run |
                   | /docker. |
