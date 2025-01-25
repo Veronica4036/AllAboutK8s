@@ -27,6 +27,10 @@ horizontalpodautoscalers            hpa          autoscaling/v2                 
 controlplane $ k api-resources | grep -ivE "calico|global"
 NAME                                SHORTNAMES   APIVERSION                        NAMESPACED   KIND
 
+----------------------------------------------------- v2 -----------------------------------------------------
+horizontalpodautoscalers            hpa          autoscaling/v2                    true         HorizontalPodAutoscaler
+
+----------------------------------------------------- v1 -----------------------------------------------------
 certificatesigningrequests          csr          certificates.k8s.io/v1            false        CertificateSigningRequest
 leases                                           coordination.k8s.io/v1            true         Lease
 endpointslices                                   discovery.k8s.io/v1               true         EndpointSlice
@@ -36,7 +40,6 @@ poddisruptionbudgets                pdb          policy/v1                      
 priorityclasses                     pc           scheduling.k8s.io/v1              false        PriorityClass
 customresourcedefinitions           crd,crds     apiextensions.k8s.io/v1           false        CustomResourceDefinition
 apiservices                                      apiregistration.k8s.io/v1         false        APIService
-horizontalpodautoscalers            hpa          autoscaling/v2                    true         HorizontalPodAutoscaler
 
 bindings                                         v1                                true         Binding
 componentstatuses                   cs           v1                                false        ComponentStatus
@@ -75,6 +78,11 @@ selfsubjectaccessreviews                         authorization.k8s.io/v1        
 selfsubjectrulesreviews                          authorization.k8s.io/v1           false        SelfSubjectRulesReview
 subjectaccessreviews                             authorization.k8s.io/v1           false        SubjectAccessReview
 
+clusterrolebindings                              rbac.authorization.k8s.io/v1      false        ClusterRoleBinding
+clusterroles                                     rbac.authorization.k8s.io/v1      false        ClusterRole
+rolebindings                                     rbac.authorization.k8s.io/v1      true         RoleBinding
+roles                                            rbac.authorization.k8s.io/v1      true         Role
+
 cronjobs                            cj           batch/v1                          true         CronJob
 jobs                                             batch/v1                          true         Job
 
@@ -84,11 +92,6 @@ prioritylevelconfigurations                      flowcontrol.apiserver.k8s.io/v1
 ingressclasses                                   networking.k8s.io/v1              false        IngressClass
 ingresses                           ing          networking.k8s.io/v1              true         Ingress
 networkpolicies                     netpol       networking.k8s.io/v1              true         NetworkPolicy
-
-clusterrolebindings                              rbac.authorization.k8s.io/v1      false        ClusterRoleBinding
-clusterroles                                     rbac.authorization.k8s.io/v1      false        ClusterRole
-rolebindings                                     rbac.authorization.k8s.io/v1      true         RoleBinding
-roles                                            rbac.authorization.k8s.io/v1      true         Rol
 
 csidrivers                                       storage.k8s.io/v1                 false        CSIDriver
 csinodes                                         storage.k8s.io/v1                 false        CSINode
