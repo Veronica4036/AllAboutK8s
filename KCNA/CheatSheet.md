@@ -24,13 +24,30 @@ horizontalpodautoscalers            hpa          autoscaling/v2                 
 ```
 
 ```
-controlplane $ k api-resources | grep -ivE "calico|global" | grep true
+controlplane $ k api-resources | grep -ivE "calico|global"
+NAME                                SHORTNAMES   APIVERSION                        NAMESPACED   KIND
+
+certificatesigningrequests          csr          certificates.k8s.io/v1            false        CertificateSigningRequest
+leases                                           coordination.k8s.io/v1            true         Lease
+endpointslices                                   discovery.k8s.io/v1               true         EndpointSlice
+events                              ev           events.k8s.io/v1                  true         Event
+runtimeclasses                                   node.k8s.io/v1                    false        RuntimeClass
+poddisruptionbudgets                pdb          policy/v1                         true         PodDisruptionBudget
+priorityclasses                     pc           scheduling.k8s.io/v1              false        PriorityClass
+customresourcedefinitions           crd,crds     apiextensions.k8s.io/v1           false        CustomResourceDefinition
+apiservices                                      apiregistration.k8s.io/v1         false        APIService
+horizontalpodautoscalers            hpa          autoscaling/v2                    true         HorizontalPodAutoscaler
+
 bindings                                         v1                                true         Binding
+componentstatuses                   cs           v1                                false        ComponentStatus
 configmaps                          cm           v1                                true         ConfigMap
 endpoints                           ep           v1                                true         Endpoints
 events                              ev           v1                                true         Event
 limitranges                         limits       v1                                true         LimitRange
+namespaces                          ns           v1                                false        Namespace
+nodes                               no           v1                                false        Node
 persistentvolumeclaims              pvc          v1                                true         PersistentVolumeClaim
+persistentvolumes                   pv           v1                                false        PersistentVolume
 pods                                po           v1                                true         Pod
 podtemplates                                     v1                                true         PodTemplate
 replicationcontrollers              rc           v1                                true         ReplicationController
@@ -38,54 +55,45 @@ resourcequotas                      quota        v1                             
 secrets                                          v1                                true         Secret
 serviceaccounts                     sa           v1                                true         ServiceAccount
 services                            svc          v1                                true         Service
+
 controllerrevisions                              apps/v1                           true         ControllerRevision
 daemonsets                          ds           apps/v1                           true         DaemonSet
 deployments                         deploy       apps/v1                           true         Deployment
 replicasets                         rs           apps/v1                           true         ReplicaSet
 statefulsets                        sts          apps/v1                           true         StatefulSet
-localsubjectaccessreviews                        authorization.k8s.io/v1           true         LocalSubjectAccessReview
-horizontalpodautoscalers            hpa          autoscaling/v2                    true         HorizontalPodAutoscaler
-cronjobs                            cj           batch/v1                          true         CronJob
-jobs                                             batch/v1                          true         Job
-leases                                           coordination.k8s.io/v1            true         Lease
-endpointslices                                   discovery.k8s.io/v1               true         EndpointSlice
-events                              ev           events.k8s.io/v1                  true         Event
-ingresses                           ing          networking.k8s.io/v1              true         Ingress
-networkpolicies                     netpol       networking.k8s.io/v1              true         NetworkPolicy
-poddisruptionbudgets                pdb          policy/v1                         true         PodDisruptionBudget
-rolebindings                                     rbac.authorization.k8s.io/v1      true         RoleBinding
-roles                                            rbac.authorization.k8s.io/v1      true         Role
-csistoragecapacities                             storage.k8s.io/v1                 true         CSIStorageCapacity
-```
 
-```
-controlplane $ k api-resources | grep -ivE "calico|global" | grep false
-componentstatuses                   cs           v1                                false        ComponentStatus
-namespaces                          ns           v1                                false        Namespace
-nodes                               no           v1                                false        Node
-persistentvolumes                   pv           v1                                false        PersistentVolume
 mutatingwebhookconfigurations                    admissionregistration.k8s.io/v1   false        MutatingWebhookConfiguration
 validatingadmissionpolicies                      admissionregistration.k8s.io/v1   false        ValidatingAdmissionPolicy
 validatingadmissionpolicybindings                admissionregistration.k8s.io/v1   false        ValidatingAdmissionPolicyBinding
 validatingwebhookconfigurations                  admissionregistration.k8s.io/v1   false        ValidatingWebhookConfiguration
-customresourcedefinitions           crd,crds     apiextensions.k8s.io/v1           false        CustomResourceDefinition
-apiservices                                      apiregistration.k8s.io/v1         false        APIService
+
 selfsubjectreviews                               authentication.k8s.io/v1          false        SelfSubjectReview
 tokenreviews                                     authentication.k8s.io/v1          false        TokenReview
+
+localsubjectaccessreviews                        authorization.k8s.io/v1           true         LocalSubjectAccessReview
 selfsubjectaccessreviews                         authorization.k8s.io/v1           false        SelfSubjectAccessReview
 selfsubjectrulesreviews                          authorization.k8s.io/v1           false        SelfSubjectRulesReview
 subjectaccessreviews                             authorization.k8s.io/v1           false        SubjectAccessReview
-certificatesigningrequests          csr          certificates.k8s.io/v1            false        CertificateSigningRequest
+
+cronjobs                            cj           batch/v1                          true         CronJob
+jobs                                             batch/v1                          true         Job
+
 flowschemas                                      flowcontrol.apiserver.k8s.io/v1   false        FlowSchema
 prioritylevelconfigurations                      flowcontrol.apiserver.k8s.io/v1   false        PriorityLevelConfiguration
+
 ingressclasses                                   networking.k8s.io/v1              false        IngressClass
-runtimeclasses                                   node.k8s.io/v1                    false        RuntimeClass
+ingresses                           ing          networking.k8s.io/v1              true         Ingress
+networkpolicies                     netpol       networking.k8s.io/v1              true         NetworkPolicy
+
 clusterrolebindings                              rbac.authorization.k8s.io/v1      false        ClusterRoleBinding
 clusterroles                                     rbac.authorization.k8s.io/v1      false        ClusterRole
-priorityclasses                     pc           scheduling.k8s.io/v1              false        PriorityClass
+rolebindings                                     rbac.authorization.k8s.io/v1      true         RoleBinding
+roles                                            rbac.authorization.k8s.io/v1      true         Rol
+
 csidrivers                                       storage.k8s.io/v1                 false        CSIDriver
 csinodes                                         storage.k8s.io/v1                 false        CSINode
+csistoragecapacities                             storage.k8s.io/v1                 true         CSIStorageCapacity
 storageclasses                      sc           storage.k8s.io/v1                 false        StorageClass
 volumeattachments                                storage.k8s.io/v1                 false        VolumeAttachment
-controlplane $ 
+
 ```
