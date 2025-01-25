@@ -100,3 +100,48 @@ storageclasses                      sc           storage.k8s.io/v1              
 volumeattachments                                storage.k8s.io/v1                 false        VolumeAttachment
 
 ```
+
+### [Network configuration reference](https://www.cni.dev/plugins/current/main/bridge/) 
+
+```
+
+name (string, required): the name of the network.
+type (string, required): “bridge”.
+bridge (string, optional): name of the bridge to use/create. Defaults to “cni0”.
+isGateway (boolean, optional): assign an IP address to the bridge. Defaults to false.
+isDefaultGateway (boolean, optional): Sets isGateway to true and makes the assigned IP the default route. Defaults to false.
+forceAddress (boolean, optional): Indicates if a new IP address should be set if the previous value has been changed. Defaults to false.
+ipMasq (boolean, optional): set up IP Masquerade on the host for traffic originating from this network and destined outside of it. Defaults to false.
+ipMasqBackend (string, optional): IP masquerading implementation to use when ipMasq is true. Can be “iptables” or “nftables”. Defaults to “iptables”, unless only “nftables” is available.
+mtu (integer, optional): explicitly set MTU to the specified value. Defaults to the value chosen by the kernel.
+hairpinMode (boolean, optional): set hairpin mode for interfaces on the bridge. Defaults to false.
+ipam (dictionary, required): IPAM configuration to be used for this network. For L2-only network, create empty dictionary.
+promiscMode (boolean, optional): set promiscuous mode on the bridge. Defaults to false.
+vlan (int, optional): assign VLAN tag. Defaults to none.
+preserveDefaultVlan (boolean, optional): indicates whether the default vlan must be preserved on the veth end connected to the bridge. Defaults to true.
+vlanTrunk (list, optional): assign VLAN trunk tag. Defaults to none.
+enabledad (boolean, optional): enables duplicate address detection for the container side veth. Defaults to false.
+macspoofchk (boolean, optional): Enables mac spoof check, limiting the traffic originating from the container to the mac address of the interface. Defaults to false.
+disableContainerInterface (boolean, optional): Set the container interface (veth peer inside the container netns) state down. When enabled, IPAM cannot be used.
+portIsolation (boolean, optional): Set isolation on the host interface (veth peer in root netns). When enabled containers can communicate only with the host, or through the gateway. Defaults to false.
+
+```
+
+### Storage
+
+```
+1. `--mount`: The explicit way to attach storage to containers
+```bash
+docker run --mount source=my_data,target=/app/data nginx
+```
+
+2. `-v` or `--volume`: Quick shorthand to attach storage to containers
+```bash
+docker run -v my_data:/app/data nginx
+```
+
+3. `--volume-driver`: Specifies which storage system to use (like NFS, AWS EBS)
+```bash
+docker run --volume-driver=nfs -v my_data:/app/data nginx
+```
+```
