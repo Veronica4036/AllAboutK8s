@@ -1,12 +1,23 @@
 ### Pointers
-- Continuous Integration / Continuous Deployment
-- According to Kubernetes' official deprecation policy, stable API elements (those that are Generally Available (GA)) must be supported for at least 12 months after being deprecated. This ensures that users have enough time to transition to newer API versions or features before the deprecated element is removed.
-- A StatefulSet requires a headless service for stable network identities and DNS resolution. This is critical for workloads needing consistent pod identities, such as databases or distributed systems.
-- GitOps tools like Argo CD and Flux use Git as the single source of truth for application deployments. They continuously compare the desired state in Git with the actual state in the cluster, ensuring that any discrepancies are either automatically corrected or flagged for review. This process promotes consistency and automation in deployment.
-- Application message distribution: This refers to communication systems like RabbitMQ or Kafka, which are unrelated to the scheduling and management of containers.
+- *Continuous Integration / Continuous Deployment*
+- *Cloud Native Computing Foundation*
+- According to Kubernetes' official deprecation policy, stable API elements (those that are Generally Available (GA)) **must be supported for at least 12 months after being deprecated**. This ensures that users have enough time to transition to newer API versions or features before the deprecated element is removed.
+- A **StatefulSet requires a headless service** for stable network identities and **DNS resolution**. This is critical for workloads needing consistent pod identities, such as databases or distributed systems.
+- **GitOps tools like Argo CD and Flux** use Git as the single source of truth for application deployments. They continuously compare the desired state in Git with the actual state in the cluster, ensuring that any discrepancies are either automatically corrected or flagged for review. This process promotes consistency and automation in deployment.
+- Application message distribution: This refers to communication systems like **RabbitMQ or Kafka**, which are unrelated to the scheduling and management of containers.
 - ExternalName maps a service to an external DNS name and requires explicit configuration.
 - [Rook](https://rook.io/) is a Kubernetes operator designed for managing storage systems like Ceph. It provides features like self-scaling, self-healing, and dynamic provisioning, making it ideal for automating storage management within Kubernetes.
-
+- OCI is responsible for developing and maintaining open industry standards around container formats and runtimes. **The OCI defines specifications like the container image format and the runtime specifications**, ensuring interoperability across container ecosystems.
+- To ensure optimal performance of an etcd cluster, network throughput and disk I/O are the most critical resources. **etcd requires high network throughput for fast data replication between cluster members and high disk I/O to handle its logging and data storage operations**. This ensures the consistency and responsiveness of the key-value store.
+- **Dockershim was a CRI-compliant adapter** that allowed Docker to be used as a container runtime with Kubernetes. While it is deprecated, it was CRI-compatible.
+- The Kubernetes scheduler primarily uses Pod resource requests (like memory), node taints (to prevent Pods from being scheduled on inappropriate nodes), and Pod affinity (to manage relationships between Pods) to make scheduling decisions. Labels are useful for selection, but the core factors involve resources, taints, and affinity.
+- A Kubernetes Service can expose multiple ports. Each port should have a unique port number & unique name: 
+- The governance board in an open source project is primarily responsible for establishing and maintaining the project's strategic direction, decision-making processes, and the rules for community interaction (the terms of engagement). They ensure the project operates smoothly, adheres to its mission, and has a clear structure for contributions and growth.
+- In Kubernetes, **Services and Pods are REST objects** because they are managed and manipulated through the Kubernetes API, which follows RESTful principles. Although they can be represented in formats like JSON or YAML, the underlying interaction with the system is based on the REST API.
+- Cloud-native applications are designed to embrace modern development principles, including: Resiliency, Agility, Operability, Observability (ORAO)
+-  set up a highly available Kubernetes cluster - cluster with at least three nodes (to form a quorum) [3 CP + 3 ETCD]
+ 
+  
 ### Popular Kubernetes distributions and their specific use cases:
 
 1. **K3s**
@@ -91,6 +102,23 @@ While other runtimes such as runV, Kata Containers, and gVisor are also OCI-comp
 - runV is focused on providing virtual machine-based isolation for containers
 - Kata Containers also uses lightweight virtual machines to offer strong isolation
 - gVisor adds a layer of security by intercepting system calls to provide additional isolation
+- cri-o: Focused on Kubernetes but not as broadly used as containerd.
+- lxd: Focused on system containers, not typical application containers.
+- kata-runtime: Focused on security isolation with lightweight virtual machines.
+
+### Observability
+- Logs: Captures events/messages but not the end-to-end request flow
+- Traces are used to represent the flow of requests through a distributed system, capturing the relationships between individual services or components
+- Spans are part of a trace, but traces themselves provide a complete view of the request's journey through the system
+- Metrics: Provides numerical data but not the flow of requests across services
+  - Summary: Aggregates data over time, providing percentiles and counts, but not for fluctuating values
+  - Counter: Only increases and is not suitable for metrics that decrease
+  - Histogram: Used for distributions, not single fluctuating values
+  - A Gauge is the metric type used in Prometheus to track a value that can fluctuate, increasing and decreasing over time. It’s ideal for metrics such as system resource usage, dynamic statuses, or other values that may go up and down during operation
+
+    
+
+  
 
 ### probes    
 A probe in Kubernetes is a diagnostic tool that the kubelet uses to assess the health and readiness of containers. Kubernetes provides three types of probes:
@@ -107,6 +135,8 @@ The correct terminology for a service mesh involves the data plane (which handle
 - Service proxy: Handles communication between services within the mesh and provides features such as load balancing, traffic routing, and service discovery.
 - Control plane: Manages the configuration and policies that control the behavior of the proxies and the overall service mesh.
 
+***Linkerd*** is a lightweight service mesh that manages traffic flows between services, enforces access policies, and collects telemetry data, all without requiring changes to application code. It operates by injecting a proxy alongside the application’s container, providing features like load balancing, service discovery, and security.
+
 ### Headless Service 
 Headless Service is a service that is explicitly configured without a ClusterIP. This is done by setting the clusterIP field to None in the service's definition. 
 - Without a ClusterIP, Kubernetes does not create a virtual IP for the service.
@@ -121,4 +151,25 @@ Some common use cases for OPA in Kubernetes include:
 - Enforcing security policies: Ensuring that labels, annotations, or network policies are applied correctly.
 - Complying with organizational policies: Verifying compliance with organizational standards for naming conventions, configurations, etc.
 - OPA policies are written in Rego
-- 
+
+### Linux Capabilities 
+
+- Restricted: Containers must drop ALL capabilities, and are only permitted to add back the NET_BIND_SERVICE capability
+- Baseline:
+  ```
+    AUDIT_WRITE
+    CHOWN
+    DAC_OVERRIDE
+    FOWNER
+    FSETID
+    KILL
+    MKNOD
+    NET_BIND_SERVICE
+    SETFCAP
+    SETGID
+    SETPCAP
+    SETUID
+    SYS_CHROOT
+    ```
+- Privileged: ALL
+
