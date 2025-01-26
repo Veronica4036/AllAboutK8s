@@ -81,7 +81,7 @@ Security Profiles:
      - ClusterIP set to None
      - Direct DNS to pod IPs
      - Used with StatefulSets
-```
+
 3. Storage:
    - PersistentVolume (PV): Admin-provisioned storage
    - Retain policy: Manual cleanup after PVC deletion
