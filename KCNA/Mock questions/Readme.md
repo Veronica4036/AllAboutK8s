@@ -1,4 +1,6 @@
 ### Pointers
+- Docker was originally called DotCloud, which was a Platform-as-a-Service (PaaS) company founded in 2008 by Solomon Hykes,	Kamel Founadi and Sebastien Pahl.
+- Kubernetes was announced by Google on June 6, 2014.
 - *Continuous Integration / Continuous Deployment* -  "continuous" emphasizes the frequent and seamless integration and delivery of software updates. The process relies on automation to handle building, testing, and deploying code efficiently. It is designed to be repeatable and to maintain high speed, ensuring rapid feedback and deployment.
 - *Cloud Native Computing Foundation*
 - According to Kubernetes' official deprecation policy, stable API elements (those that are Generally Available (GA)) **must be supported for at least 12 months after being deprecated**. This ensures that users have enough time to transition to newer API versions or features before the deprecated element is removed.
@@ -16,7 +18,7 @@
 - A Kubernetes Service can expose multiple ports. Each port should have a unique port number & unique name: 
 - The governance board in an open source project is primarily responsible for establishing and maintaining the project's strategic direction, decision-making processes, and the rules for community interaction (the terms of engagement). They ensure the project operates smoothly, adheres to its mission, and has a clear structure for contributions and growth.
 - In Kubernetes, **Services and Pods are REST objects** because they are managed and manipulated through the Kubernetes API, which follows RESTful principles. Although they can be represented in formats like JSON or YAML, the underlying interaction with the system is based on the REST API.
-- Cloud-native applications are designed to embrace modern development principles, including: Resiliency, Agility, Operability, Observability (ORAO)
+- Cloud-native applications are designed to embrace modern development principles, including: Resiliency, Agility, Operability, Observability (ORAO). In cloud-native practices, resilience and fault tolerance are foundational principles. Designing systems with the expectation that components will fail ensures that the overall system remains functional and available. This involves using techniques like distributed architectures, redundancy, health monitoring, and automated recovery to minimize downtime and user impact.
 -  set up a highly available Kubernetes cluster - cluster with at least three nodes (to form a quorum) [3 CP + 3 ETCD]
 - Zookeeper is great for systems that need strong coordination and reliability, particularly in very large and complex environments. On the other hand, etcd is simple to set up, uses fewer resources, and performs faster, making it a good choice for smaller systems or those that need to scale easily.
 - When a PersistentVolume (PV) has a Retain reclaim policy, the volume is not automatically deleted or recycled after the corresponding PersistentVolumeClaim (PVC) is deleted. Instead, the volume remains in the cluster, and manual steps are required to reclaim or clean up the data. This policy is useful for retaining critical data even after the PVC is deleted.
@@ -25,7 +27,21 @@
 -  CloudEvents is an open standard for event data, providing a consistent way to describe events that can be used across different cloud providers, services, and platforms. The goal is to improve interoperability, making it easier to process and manage events in various systems.
 -  Kubernetes Operators are designed to extend Kubernetes' functionality to manage complex, stateful applications. Operators use custom controllers to automate tasks like deployment, scaling, and recovery of stateful applications (e.g., databases, message queues), handling their lifecycle and maintaining their desired state.
 -  A PersistentVolume (PV) is a piece of storage in the Kubernetes cluster that is provisioned by an administrator.
-  
+- While the term "generic secret" is used to describe a standard secret, the actual type assigned is Opaque.
+- The --from-file flag is used for creating ConfigMaps from literal file content rather than from key-value pairs.
+- The --from-env-file flag is used to create a ConfigMap by reading key-value pairs from a file. Each line in the file should be in the format key=value.
+- The && operator in a Dockerfile is used to chain commands together, executing each command sequentially, but only if the previous command was successful (i.e., it exited with a zero status). If any command fails, the rest will not be executed. (It does not run commands in a layer regardless of success; that behavior is handled by the semicolon (;))
+- The Node Controller is responsible for monitoring the health of nodes in a Kubernetes cluster. It detects node failures and takes action to ensure that Pods running on unhealthy nodes are rescheduled onto healthy nodes.
+- 
+### Linux Namespaces
+In 2002, the Linux kernel was enhanced with the addition of 6 namespaces that provided process isolation, a key foundation for modern containerization. These namespaces included:
+- Mount (mnt): Isolates file system mount points.
+- PID (pid): Isolates process IDs.
+- IPC (ipc): Isolates interprocess communication resources, like message queues and semaphores.
+- Network (net): Isolates networking resources, such as network interfaces and routing tables.
+- User (user): Isolates user and group IDs.
+- UTS (Unix Timesharing System): Isolates hostname and domain name settings.
+    
 ### Popular Kubernetes distributions and their specific use cases:
 
 - **K3s** - K3s is a lightweight Kubernetes distribution tailored for edge computing and resource-constrained environments. It is optimized for minimal overhead and reduced resource usage, making it ideal for distributed systems at the edge.
@@ -62,7 +78,8 @@ Platform Engineer roles are like builders of developer-friendly platforms. They 
 
 **FinOps (Financial Operations)** is the practice of bringing financial accountability to the cloud by enabling organizations to manage their cloud spend effectively. It aims to optimize cloud costs and integrate financial considerations into development and operational workflows.
 
-**FaaS(Function as a service (FaaS))**: This refers to serverless computing 
+**FaaS(Function as a service (FaaS))**: This refers to serverless computing. The "Scale to zero" model is a key feature of serverless architectures.
+One significant challenge with serverless solutions in the Cloud Native context is the potential for vendor lock-in. Since serverless platforms are tightly integrated with specific cloud providers (such as AWS Lambda or Azure Functions), migrating to a different provider could be challenging without significant changes to the application. 
 
 ### container runtime
 runC is the official container runtime that implements the OCI Runtime Specification, making it the correct choice when looking for an OCI-compliant native runtime.
@@ -89,12 +106,14 @@ While other runtimes such as runV, Kata Containers, and gVisor are also OCI-comp
 
   
  ### Tools:
-- **GitOps Toolkit**: This term refers to a set of tools and libraries, not a specific tool for syncing with Git repositories.
+- **GitOps Toolkit**: This term refers to a set of tools and libraries, not a specific tool for syncing with Git repositories. The GitOps Toolkit is the foundation of Flux, a leading GitOps delivery tool for Kubernetes. It provides reusable components to enable GitOps workflows, allowing users to implement declarative continuous delivery effectively.
 - **Linkerd and Istio**: These are service mesh tools, not tools for syncing Kubernetes clusters with Git repositories.
 - **Helm and Kustomize**: These tools are used for resource management and customization, but they do not automate the GitOps process for syncing clusters with repositories.
 - **Falc0** is an open-source runtime security tool designed to detect anomalous behavior and security threats in containerized environments. It monitors system calls at runtime and can identify unexpected activities, such as unauthorized access or suspicious file changes, making it a widely used tool for Kubernetes and container runtime security.
 - **Rancher Kubernetes Engine (RKE)** -  Multi-cluster management
-
+- GitLab CI/CD: Used for CI/CD pipelines, not specific to GitOps or the GitOps Toolkit.
+- Jenkins: A general-purpose automation server, not a GitOps tool.
+- Argo CD: A popular GitOps tool but does not rely on the GitOps Toolkit.
 
 ### probes    
 A probe in Kubernetes is a diagnostic tool that the kubelet uses to assess the health and readiness of containers. Kubernetes provides three types of probes:
